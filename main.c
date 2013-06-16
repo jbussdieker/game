@@ -14,6 +14,10 @@
 
 int window;
 
+void SetupGL(int width, int height) {
+  glOrtho(0, width, height, 0, -1, 1);
+}
+
 void LoadImage() {
   int width = 32;
   int height = 32;
@@ -43,26 +47,31 @@ void LoadImage() {
   glShadeModel(GL_FLAT);
 }
 
+void DrawSprite(int x, int y, int width, int height) {
+  // Clockwise starting in the upper left
+  glBegin(GL_QUADS);
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(x, y, 0.0);
+
+    glTexCoord2f(0.0, 1.0);
+    glVertex3f(x, y + height, 0.0);
+
+    glTexCoord2f(1.0, 1.0);
+    glVertex3f(x + width, y + height, 0.0);
+
+    glTexCoord2f(1.0, 0.0);
+    glVertex3f(x + width, y, 0.0);
+
+  glEnd();
+}
+
 void DrawGLScene()
 {
   glClearColor(0.0f,0.1f,0.0f,0.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  // Clockwise starting in the upper left
-  glBegin(GL_QUADS);
-    glTexCoord2f(0.0, 0.0);
-    glVertex3f(-0.5, -0.5, 0.0);
-
-    glTexCoord2f(0.0, 1.0);
-    glVertex3f(-0.5, 0.5, 0.0);
-
-    glTexCoord2f(1.0, 1.0);
-    glVertex3f(0.5, 0.5, 0.0);
-
-    glTexCoord2f(1.0, 0.0);
-    glVertex3f(0.5, -0.5, 0.0);
-
-  glEnd();
+  DrawSprite(320-16, 240-16, 32, 32);
+  DrawSprite(16, 16, 32, 32);
 
   glutSwapBuffers();
 }
@@ -83,6 +92,7 @@ int main(int argc, char **argv) {
   window = glutCreateWindow("game");
   glutDisplayFunc(&DrawGLScene);  
   glutKeyboardFunc(&keyPressed);
+  SetupGL(640, 480);
   LoadImage();
   glutMainLoop();  
   return 0;
