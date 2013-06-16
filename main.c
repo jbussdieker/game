@@ -83,9 +83,9 @@ void DrawGLScene()
 
 void keyPressed(unsigned char key, int x, int y) 
 {
-  if (key == ESCAPE) { 
-    glutDestroyWindow(window); 
-    exit(0);                   
+  if (key == ESCAPE) {
+    glutDestroyWindow(window);
+    exit(0);
   }
 }
 
