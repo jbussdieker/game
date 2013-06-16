@@ -13,32 +13,33 @@
 #define ESCAPE 27
 
 int window;
+void *sprite1;
+void *sprite2;
+void *sprite3;
 
 void SetupGL(int width, int height) {
   glOrtho(0, width, height, 0, -1, 1);
 }
 
-void LoadImage() {
-  int width = 32;
-  int height = 32;
-  GLubyte *textureImage;
+void *CreateSprite(int width, int height, unsigned long color) {
+  unsigned char *textureImage;
 
   // Allocate bytes
-  textureImage = malloc(width*height*3);
+  textureImage = malloc(width*height*4);
 
-  // Clear to black
-  memset(textureImage, 0, width*height*3);
+  unsigned int i;
+  for(i = 0; i < width * height * 4; i += 4) {
+    textureImage[i] = color & 0xFF;
+    textureImage[i+1] = (color >> 8) & 0xFF;
+    textureImage[i+2] = (color >> 16) & 0xFF;
+    textureImage[i+3] = (color >> 24) & 0xFF;
+  }
 
-  // Upper right (blue)
-  textureImage[width*height*3-1] = 255;
+  return textureImage;
+}
 
-  // Center (green)
-  textureImage[width*height*3/2+width*3/2+1] = 255;
-
-  // Bottom left (red)
-  textureImage[0] = 255;
-
-  glTexImage2D(GL_TEXTURE_2D, 0, 3, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, textureImage);
+void LoadImage(void *sprite, int width, int height) {
+  glTexImage2D(GL_TEXTURE_2D, 0, 4, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, sprite);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -47,7 +48,9 @@ void LoadImage() {
   glShadeModel(GL_FLAT);
 }
 
-void DrawSprite(int x, int y, int width, int height) {
+void DrawSprite(int x, int y, int width, int height, void *sprite) {
+  LoadImage(sprite, width, height);
+
   // Clockwise starting in the upper left
   glBegin(GL_QUADS);
     glTexCoord2f(0.0, 0.0);
@@ -67,11 +70,13 @@ void DrawSprite(int x, int y, int width, int height) {
 
 void DrawGLScene()
 {
-  glClearColor(0.0f,0.1f,0.0f,0.0f);
+  // Default is black
+  //glClearColor(0.0f,0.1f,0.0f,0.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  DrawSprite(320-16, 240-16, 32, 32);
-  DrawSprite(16, 16, 32, 32);
+  DrawSprite(0, 0, 128, 128, sprite1);
+  DrawSprite(320-64, 240-64, 128, 128, sprite2);
+  DrawSprite(640-128, 480-128, 128, 128, sprite3);
 
   glutSwapBuffers();
 }
@@ -85,6 +90,10 @@ void keyPressed(unsigned char key, int x, int y)
 }
 
 int main(int argc, char **argv) {
+  sprite1 = CreateSprite(128, 128, 0x000000FF);
+  sprite2 = CreateSprite(128, 128, 0x0000FF00);
+  sprite3 = CreateSprite(128, 128, 0x00FF0000);
+
   glutInit(&argc, argv);  
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);  
   glutInitWindowSize(640, 480);  
@@ -93,7 +102,6 @@ int main(int argc, char **argv) {
   glutDisplayFunc(&DrawGLScene);  
   glutKeyboardFunc(&keyPressed);
   SetupGL(640, 480);
-  LoadImage();
   glutMainLoop();  
   return 0;
 }
