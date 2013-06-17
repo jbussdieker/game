@@ -18,8 +18,12 @@ endif
 CC = gcc
 CFLAGS = $(COMPILERFLAGS) $(INCLUDE)
 
-all: game
-game:main.o
-	$(CC) $(FRAMEWORK) $(CFLAGS) -o $@ $(LIBDIR) $< $(LIBRARIES)  
+game_NAME := game
+game_SRCS := $(wildcard *.c)
+game_OBJS := ${game_SRCS:.c=.o}
+
+all: $(game_NAME)
+$(game_NAME): $(game_OBJS)
+	$(CC) $(FRAMEWORK) $(CFLAGS) -o $(game_NAME) $(LIBDIR) $(game_OBJS) $(LIBRARIES)  
 clean:
-	rm -f game main.o
+	rm -f $(game_NAME) $(game_OBJS)
