@@ -2,13 +2,9 @@
 // INCLUDES
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef __APPLE__
-	#include <OpenGL/gl.h>
-	#include <OpenGL/glu.h>
 	#include <GLUT/glut.h>
 #else
 	#include <GL/glut.h>
-	#include <GL/gl.h>
-	#include <GL/glu.h>
 #endif
 
 #include "game.h"
@@ -28,13 +24,19 @@ static int window;
 ////////////////////////////////////////////////////////////////////////////////
 // PUBLIC FUNCTIONS
 ////////////////////////////////////////////////////////////////////////////////
-void keyPressed(unsigned char key, int x, int y) 
+void key_press(unsigned char key, int x, int y) 
 {
   if (key == ESCAPE) {
     glutDestroyWindow(window);
     game_delete();
     exit(0);
   }
+}
+void render() {
+  opengl_render();
+  game_render();
+
+  glutSwapBuffers();
 }
 
 int main(int argc, char **argv) {
@@ -43,8 +45,8 @@ int main(int argc, char **argv) {
   glutInitWindowSize(640, 480);  
   glutInitWindowPosition(0, 0);  
   window = glutCreateWindow("game");
-  glutDisplayFunc(&opengl_render);  
-  glutKeyboardFunc(&keyPressed);
+  glutDisplayFunc(&render);  
+  glutKeyboardFunc(&key_press);
   opengl_create(640, 480);
   game_create();
   glutMainLoop();  

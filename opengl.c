@@ -4,9 +4,7 @@
 #ifdef __APPLE__
 	#include <OpenGL/gl.h>
 	#include <OpenGL/glu.h>
-	#include <GLUT/glut.h>
 #else
-	#include <GL/glut.h>
 	#include <GL/gl.h>
 	#include <GL/glu.h>
 #endif
@@ -54,6 +52,4 @@ void opengl_draw_sprite(int x, int y, sprite *sprite) {
 void opengl_render()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  game_render();
-  glutSwapBuffers();
 }
