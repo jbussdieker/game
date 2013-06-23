@@ -30,6 +30,9 @@ void key_press(unsigned char key, int x, int y)
     glutDestroyWindow(window);
     game_delete();
     exit(0);
+  } else {
+    game_key_press(key, x, y);
+    glutPostRedisplay();
   }
 }
 void render() {

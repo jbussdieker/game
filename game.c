@@ -1,33 +1,31 @@
 ////////////////////////////////////////////////////////////////////////////////
 // INCLUDES
 ////////////////////////////////////////////////////////////////////////////////
-#include "sprite.h"
-#include "opengl.h"
+#include "map.h"
+#include "char.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // PRIVATE VARIABLES
 ////////////////////////////////////////////////////////////////////////////////
-static sprite *sprite1;
-static sprite *sprite2;
-static sprite *sprite3;
 
 ////////////////////////////////////////////////////////////////////////////////
 // PUBLIC FUNCTIONS
 ////////////////////////////////////////////////////////////////////////////////
 void game_create() {
-  sprite1 = sprite_create(32, 32, 0x000000FF);
-  sprite2 = sprite_create(64, 64, 0x0000FF00);
-  sprite3 = sprite_create(128, 128, 0x00FF0000);
+  map_create();
+  char_create();
 }
 
 void game_render() {
-  opengl_draw_sprite(0, 0, sprite1);
-  opengl_draw_sprite(320-64, 240-64, sprite2);
-  opengl_draw_sprite(640-128, 480-128, sprite3);
+  map_render();
+  char_render();
 }
 
 void game_delete() {
-  sprite_delete(sprite1);
-  sprite_delete(sprite2);
-  sprite_delete(sprite3);
+  map_delete();
+  char_delete();
+}
+
+void game_key_press(unsigned char key, int x, int y) {
+  char_key_press(key, x, y);
 }

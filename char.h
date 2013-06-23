@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // PUBLIC FUNCTIONS
 ////////////////////////////////////////////////////////////////////////////////
-void game_create();
-void game_render();
-void game_delete();
-void game_key_press(unsigned char key, int x, int y);
+void char_create();
+void char_render();
+void char_delete();
+void char_key_press(unsigned char key, int x, int y);
